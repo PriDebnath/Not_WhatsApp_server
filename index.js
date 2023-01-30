@@ -47,6 +47,7 @@ app.use(cors());
 let server = http.createServer(app);
 
 let io = new Server(server, {
+  maxHttpBufferSize : 1_000_000_000 ,
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
@@ -59,7 +60,7 @@ let ids = {
     user: "global chat",
   },
 };
-console.log(ids);
+// console.log(ids);
 app.get("", (req, res) => {
   console.log("client came");
   res.send(ids);
@@ -68,16 +69,17 @@ app.get("", (req, res) => {
 io.on("connection", (socket) => {
   // console.log(socket)
   //io.to(sendTo).emit(sendData)
-  console.log("new id came", socket.id);
-  console.log("ids", ids);
+  // console.log("new id came", socket.id);
+  // console.log("ids", ids);
   ids[socket.id] = { id: socket.id, user: `Guest ${socket.id.slice(0, 2)}` };
 
   socket.on("send_message", (data) => {
     data = { ...data, fromClient: false, ids };
+
     // storing all ids with user name
     ids[socket.id] = { id: socket.id, user: data.user.slice(0,8) };
 
-    console.log({ ids });
+    console.log({ data });
 
     // logic to send message to global or individual
     if (data.receiverId == "global") {
@@ -87,9 +89,13 @@ io.on("connection", (socket) => {
       let sendData = { ...data, receiverId: data.id };
       // io.to(sendTo).emit(sendData);
       socket.to(sendTo).emit("receive_message", sendData);
-      console.log({ sendData, sendTo });
+      // console.log({ sendData, sendTo });
     }
+
   });
+
+  // when user leave
+  
   socket.on("disconnect", (reason) => {
     // let index = ids.indexOf(socket.id)
     // ids.splice(index,1)
@@ -108,6 +114,7 @@ io.on("connection", (socket) => {
 });
 
 let port = 3001;
-server.listen(port, () => {
-  console.log(" Running on ", port);
+const address = "127.0.0.8" // hostname
+server.listen(port,address, () => {
+  console.log(" Running on ",address,port);
 });
