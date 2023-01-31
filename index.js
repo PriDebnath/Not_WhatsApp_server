@@ -114,7 +114,7 @@ io.on("connection", (socket) => {
 });
 
 let port = process.env.PORT || 3001;
-const address = "127.0.0.8" // hostname
-server.listen(port, () => {
-  console.log(" Running on ",port);
+const address = process.env.HOSTNAME // hostname
+server.listen(port, address, () => {
+  console.log(" Running on ", address, port);
 });
