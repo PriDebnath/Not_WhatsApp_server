@@ -43,13 +43,20 @@ let cors = require("cors");
 
 let app = express();
 app.use(cors());
+app.use((req,res,next)=>{
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Methods","GET, HEAD, OPTIONS, POST, PUT, DELETE")
+    res. header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization")
+    next();
+      
+})
 
 let server = http.createServer(app);
 
 let io = new Server(server, {
-  maxHttpBufferSize : 1_000_000_000 ,
+  maxHttpBufferSize : 1_000_000 ,
   cors: {
-    origin: "*",
+    // origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -113,8 +120,8 @@ io.on("connection", (socket) => {
   });
 });
 
-let port = process.env.PORT || 3001;
-const address = "127.0.0.8" // hostname
-server.listen(port, () => {
+let port = process.env.PORT || "10000";
+const address = "127.0.0.1" || "bld-cfck8k9gp3jokp2ni0j0-jxjm7-jb9mj" // hostname
+server.listen(port,address, () => {
   console.log(" Running on ",port);
 });
