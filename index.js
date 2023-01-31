@@ -120,8 +120,8 @@ io.on("connection", (socket) => {
   });
 });
 
-let port = process.env.PORT || "10000";
-const address = "127.0.0.1" || "bld-cfck8k9gp3jokp2ni0j0-jxjm7-jb9mj" // hostname
-server.listen(port,address, () => {
-  console.log(" Running on ",port);
+let port = process.env.PORT || 3001;
+const address = process.env.HOSTNAME // hostname
+server.listen(port, address, () => {
+  console.log(" Running on ", address, port);
 });
