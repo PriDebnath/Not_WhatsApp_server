@@ -56,7 +56,7 @@ let server = http.createServer(app);
 let io = new Server(server, {
   maxHttpBufferSize : 1_000_000 ,
   cors: {
-    // origin: "*",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
