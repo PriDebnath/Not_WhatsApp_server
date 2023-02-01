@@ -45,8 +45,8 @@ let app = express();
 app.use(cors());
 app.use((req,res,next)=>{
     res.header("Access-Control-Allow-Origin", "*")
-    res.header("Access-Control-Allow-Methods","GET, HEAD, OPTIONS, POST, PUT, DELETE")
-    res. header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization")
+    // res.header("Access-Control-Allow-Methods","GET, HEAD, OPTIONS, POST, PUT, DELETE")
+    // res. header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization")
     next();
       
 })
@@ -68,16 +68,17 @@ let ids = {
   },
 };
 // console.log(ids);
-app.get("", (req, res) => {
+
+app.get("/", (req, res) => {
   console.log("client came");
+  res.header("Access-Control-Allow-Origin", "*")
+
   res.send(ids);
 });
 
+
 io.on("connection", (socket) => {
-  // console.log(socket)
-  //io.to(sendTo).emit(sendData)
-  // console.log("new id came", socket.id);
-  // console.log("ids", ids);
+
   ids[socket.id] = { id: socket.id, user: `Guest ${socket.id.slice(0, 2)}` };
 
   socket.on("send_message", (data) => {
@@ -121,7 +122,7 @@ io.on("connection", (socket) => {
 });
 
 let port = process.env.PORT || 3001;
-const address = process.env.HOSTNAME // hostname
+const address = process.env.HOSTNAME  // hostname
 server.listen(port, address, () => {
   console.log(" Running on ", address, port);
 });
